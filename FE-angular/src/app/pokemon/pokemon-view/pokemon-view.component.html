@@ -1,0 +1,29 @@
+<style>
+    .glass-card {
+        background: rgba(255, 255, 255, 0.2);
+        box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+        backdrop-filter: blur(6px);
+        -webkit-backdrop-filter: blur(6px);
+        border-radius: 10px;
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        max-width: 500px;
+    }
+</style>
+
+<div class="container">
+
+    <div *ngIf="isNotFound else Pokemon" class="alert alert-danger">No Pokemon Found by id: {{id}}</div>
+
+    <ng-template #Pokemon>
+
+        <div class="glass-card card m-4 p-3">
+            <img src={{pokemon.imageUrl}} alt="">
+            <p class="display-6">{{pokemon.name | titlecase}}</p>
+            <p>
+                Speciality: <span class="badge bg-secondary">{{pokemon.power.name}}</span>
+            </p>
+            <button class="btn btn-primary m-auto" (click)="goBack()">Go Back</button>
+
+        </div>
+    </ng-template>
+</div>

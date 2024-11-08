@@ -1,0 +1,9 @@
+<div class="glass-card card m-4 p-3">
+    <img src={{pokemon.imageUrl}} alt="pokemon image">
+    <p class="display-6">{{pokemon.name |titlecase }}</p>
+    <p>
+        Power: <span class="badge bg-secondary">{{pokemon.power.name}}</span>
+    </p>
+    <button class="btn btn-primary m-auto" routerLink="/pokemon-list/{{pokemon.id}}">View Details</button>
+
+</div>

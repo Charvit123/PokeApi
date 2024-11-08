@@ -1,0 +1,70 @@
+{
+  "pokemon": [
+    {
+      "id": 1,
+      "name": "pikachu",
+      "speciality": "electric",
+      "imgUrl": "https://assets.pokemon.com/assets/cms2/img/pokedex/detail/025.png"
+    },
+    {
+      "id": 2,
+      "name": "zacian",
+      "speciality": "fairy",
+      "imgUrl": "https://assets.pokemon.com/assets/cms2/img/pokedex/detail/888.png"
+    },
+    {
+      "id": 3,
+      "name": "capsak",
+      "speciality": "grass",
+      "imgUrl": "https://assets.pokemon.com/assets/cms2/img/pokedex/detail/951.png"
+    },
+    {
+      "id": 4,
+      "name": "darkrai",
+      "speciality": "dark",
+      "imgUrl": "https://assets.pokemon.com/assets/cms2/img/pokedex/detail/491.png"
+    },
+    {
+      "name": "bulbasaur",
+      "speciality": "grass",
+      "imgUrl": "https://assets.pokemon.com/assets/cms2/img/pokedex/detail/001.png",
+      "id": 5
+    },
+    {
+      "name": "charizard",
+      "speciality": "fire",
+      "imgUrl": "https://assets.pokemon.com/assets/cms2/img/pokedex/detail/006.png",
+      "id": 6
+    },
+    {
+      "name": "metapod",
+      "speciality": "bug",
+      "imgUrl": "https://assets.pokemon.com/assets/cms2/img/pokedex/detail/011.png",
+      "id": 7
+    },
+    {
+      "name": "caterpie",
+      "speciality": "bug",
+      "imgUrl": "https://assets.pokemon.com/assets/cms2/img/pokedex/detail/010.png",
+      "id": 8
+    },
+    {
+      "name": "butterfree",
+      "speciality": "flying",
+      "imgUrl": "https://assets.pokemon.com/assets/cms2/img/pokedex/detail/012.png",
+      "id": 9
+    },
+    {
+      "name": "magmorter",
+      "speciality": "fire",
+      "imgUrl": "https://assets.pokemon.com/assets/cms2/img/pokedex/detail/467.png",
+      "id": 10
+    },
+    {
+      "name": "paras",
+      "speciality": "Dry Skin",
+      "imgUrl": "https://assets.pokemon.com/assets/cms2/img/pokedex/detail/046.png",
+      "id": 11
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+micronaut:
+  application:
+    name: testApi
+  server:
+      port: 5000
+      cors:
+        enabled: true
+datasources:
+  default:
+    driver-class-name: ${DATASOURCES_DEFAULT_DRIVER:org.mariadb.jdbc.Driver }
+    db-type: mariadb
+    dialect: MYSQL
+    jdbc-url: ${DATASOURCES_DEFAULT_URL:`jdbc:mariadb://localhost:3306/pokemon` }
+    username: ${DATASOURCES_DEFAULT_USER:root }
+    password: ${DATASOURCES_DEFAULT_PASSWORD:my-secret-pw }
+liquibase:
+  datasources:
+    default:
+      change-log: classpath:db/liquibase-changelog.yml
+netty:
+  default:
+    allocator:
+      max-order: 3
+
+
+
