@@ -11,17 +11,16 @@ import org.slf4j.LoggerFactory;
 
 @Singleton
 public class Serialization implements ApplicationEventListener<StartupEvent> {
-  private static final Logger log = LoggerFactory.getLogger(Serialization.class);
+    private static final Logger log = LoggerFactory.getLogger(Serialization.class);
 
-  private final ObjectMapper mapper;
+    private final ObjectMapper mapper;
 
-  public Serialization(ObjectMapper mapper) {
+    public Serialization(ObjectMapper mapper) {
+        this.mapper = mapper;
+    }
 
-    this.mapper = mapper;
-  }
-
-  @Override
-  public void onApplicationEvent(StartupEvent event) {
-    mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-  }
+    @Override
+    public void onApplicationEvent(StartupEvent event) {
+        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+    }
 }

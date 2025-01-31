@@ -7,19 +7,18 @@ import java.util.List;
 @Singleton
 public class PowerService {
 
-  private final PowerRepository powerRepository;
+    private final PowerRepository powerRepository;
 
 
-  public PowerService(PowerRepository powerRepository) {
-    this.powerRepository = powerRepository;
-  }
+    public PowerService(PowerRepository powerRepository) {
+        this.powerRepository = powerRepository;
+    }
 
+    public Power get(String name) {
+        return powerRepository.findByName(name);
+    }
 
-  public Power get(String name) {
-    return powerRepository.findByName(name);
-  }
-
-  public List<Power> getAll() {
-    return powerRepository.findAll();
-  }
+    public List<Power> getAll() {
+        return powerRepository.findAll();
+    }
 }

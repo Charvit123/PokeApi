@@ -7,7 +7,7 @@ import java.util.Optional;
 
 @Repository
 public interface PokemonRepository extends CrudRepository<Pokemon, Integer> {
-  boolean existsByNameIgnoreCase(String name);
+    boolean existsByNameIgnoreCase(String name);
 
-  Optional<Pokemon> findByNameIgnoreCase(String name);
+    Optional<Pokemon> findByNameIgnoreCase(String name);
 }

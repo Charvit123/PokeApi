@@ -8,8 +8,8 @@ import java.util.List;
 
 @Repository
 public interface PowerRepository extends CrudRepository<Power, Long> {
-  Power findByName(String name);
+    Power findByName(String name);
 
-  @NotNull
-  List<Power> findAll();
+    @NotNull
+    List<Power> findAll();
 }

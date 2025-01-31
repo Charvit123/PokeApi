@@ -8,47 +8,53 @@ import javax.persistence.*;
 @Table(name = "pokemon")
 public class Pokemon {
 
-  @Id @GeneratedValue(strategy = GenerationType.IDENTITY) private java.lang.Integer id;
-  private String name;
-  @ManyToOne
-  @JoinColumn(referencedColumnName = "id",name="power")
-  private Power power;
-  private String imageUrl;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private java.lang.Integer id;
 
-  public Pokemon() {}
+    private String name;
 
-  public Pokemon(java.lang.Integer id, String name, Power power, String imageUrl) {
-    this.id = id;
-    this.name = name;
-    this.power = power;
-    this.imageUrl = imageUrl;
-  }
+    @ManyToOne
+    @JoinColumn(referencedColumnName = "id", name = "power")
+    private Power power;
 
-  public java.lang.Integer getId() {
-    return id;
-  }
+    private String imageUrl;
 
-  public String getName() {
-    return name;
-  }
+    public Pokemon() {
+    }
 
-  public void setName(String name) {
-    this.name = name;
-  }
+    public Pokemon(java.lang.Integer id, String name, Power power, String imageUrl) {
+        this.id = id;
+        this.name = name;
+        this.power = power;
+        this.imageUrl = imageUrl;
+    }
 
-  public Power getPower() {
-    return power;
-  }
+    public java.lang.Integer getId() {
+        return id;
+    }
 
-  public void setPower(Power power) {
-    this.power = power;
-  }
+    public String getName() {
+        return name;
+    }
 
-  public String getImageUrl() {
-    return imageUrl;
-  }
+    public void setName(String name) {
+        this.name = name;
+    }
 
-  public void setImageUrl(String imageUrl) {
-    this.imageUrl = imageUrl;
-  }
+    public Power getPower() {
+        return power;
+    }
+
+    public void setPower(Power power) {
+        this.power = power;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
 }

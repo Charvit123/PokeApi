@@ -8,14 +8,14 @@ import java.util.List;
 @Controller("/power")
 public class PowerController {
 
-  private final PowerService powerService;
+    private final PowerService powerService;
 
-  public PowerController(PowerService powerService) {
-    this.powerService = powerService;
-  }
+    public PowerController(PowerService powerService) {
+        this.powerService = powerService;
+    }
 
-  @Get
-  public List<Power> getAll() {
-    return powerService.getAll();
-  }
+    @Get
+    public List<Power> getAll() {
+        return powerService.getAll();
+    }
 }

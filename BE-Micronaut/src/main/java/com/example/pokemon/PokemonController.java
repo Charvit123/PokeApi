@@ -8,37 +8,35 @@ import java.util.List;
 @Controller("/pokemon")
 public class PokemonController {
 
-  private final PokemonService pokemonService;
+    private final PokemonService pokemonService;
 
-  public PokemonController(PokemonService pokemonService) {
-    this.pokemonService = pokemonService;
-  }
+    public PokemonController(PokemonService pokemonService) {
+        this.pokemonService = pokemonService;
+    }
 
-  @Get
-  public List<Pokemon> getAll() {
-    return pokemonService.getAll();
-  }
+    @Get
+    public List<Pokemon> getAll() {
+        return pokemonService.getAll();
+    }
 
-  @Get("/{id}")
-  public HttpResponse<Pokemon> getById(@PathVariable("id") Integer id) {
-    return HttpResponse.ok(pokemonService.getById(id));
-  }
+    @Get("/{id}")
+    public HttpResponse<Pokemon> getById(@PathVariable("id") Integer id) {
+        return HttpResponse.ok(pokemonService.getById(id));
+    }
 
-  @Post
-  public HttpResponse<Pokemon> create(@Body PokemonCreationForm pokemonForm) {
-    return HttpResponse.created(pokemonService.create(pokemonForm));
-  }
+    @Post
+    public HttpResponse<Pokemon> create(@Body PokemonCreationForm pokemonForm) {
+        return HttpResponse.created(pokemonService.create(pokemonForm));
+    }
 
-  @Put
-  public HttpResponse<Pokemon> update(@Body PokemonUpdationForm pokemonForm) {
+    @Put
+    public HttpResponse<Pokemon> update(@Body PokemonUpdationForm pokemonForm) {
+        return HttpResponse.created(pokemonService.update(pokemonForm));
+    }
 
-    return HttpResponse.created(pokemonService.update(pokemonForm));
-  }
-
-  @Delete("/{id}")
-  public HttpResponse<Pokemon> delete(@PathVariable Integer id) {
-
-    pokemonService.delete(id);
-    return HttpResponse.ok();
-  }
+    @Delete("/{id}")
+    public HttpResponse<Pokemon> delete(@PathVariable Integer id) {
+        pokemonService.delete(id);
+        return HttpResponse.ok();
+    }
 }
