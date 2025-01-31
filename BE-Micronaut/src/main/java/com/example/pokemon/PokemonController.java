@@ -16,7 +16,7 @@ public class PokemonController {
 
   @Get
   public List<Pokemon> getAll() {
-    return pokemonService.get();
+    return pokemonService.getAll();
   }
 
   @Get("/{id}")

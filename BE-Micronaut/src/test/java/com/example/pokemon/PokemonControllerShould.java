@@ -30,7 +30,7 @@ public class PokemonControllerShould {
         // Arrange
         pokemonController.getAll();
 
-        verify(pokemonService).get();
+        verify(pokemonService).getAll();
     }
 
     @Test

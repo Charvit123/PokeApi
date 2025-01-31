@@ -10,7 +10,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
@@ -68,11 +67,11 @@ class PokemonServiceShould {
 
   @Test
   @DisplayName("Test Get All Pokemons")
-  void get() {
+  void getAll() {
 
     when(pokemonRepository.findAll()).thenReturn(pokemons);
 
-    List<Pokemon> retunedPokemons = pokemonService.get();
+    List<Pokemon> retunedPokemons = pokemonService.getAll();
 
     verify(pokemonRepository).findAll();
 
@@ -100,7 +99,7 @@ class PokemonServiceShould {
 
   @Test
   @DisplayName("Test Get Pokemon By Id")
-  void getById() {
+  void getAllById() {
     when(pokemonRepository.findById(anyInt())).thenReturn(Optional.ofNullable(pikachuPokemon));
 
     Pokemon returnedPokemon = pokemonService.getById(1);

@@ -27,7 +27,7 @@ public class PokemonService {
     this.powerService = powerService;
   }
 
-  public List<Pokemon> get() {
+  public List<Pokemon> getAll() {
     return (List<Pokemon>) pokemonRepository.findAll();
   }
 
