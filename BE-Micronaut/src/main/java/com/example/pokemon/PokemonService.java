@@ -60,7 +60,7 @@ public class PokemonService {
 
     @Transactional
     public Pokemon update(PokemonUpdationForm pokemonForm) {
-        Pokemon updatedPokemon = new Pokemon();
+        Pokemon updatedPokemon;
         Pokemon pokemonWithId =
                 pokemonRepository
                         .findById(pokemonForm.getId())

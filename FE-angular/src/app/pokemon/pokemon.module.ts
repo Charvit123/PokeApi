@@ -8,13 +8,14 @@ import { PokemonListComponent } from './pokemon-list/pokemon-list.component';
 import { PokemonRoutingModule } from './pokemon-routing.module';
 import { PokemonViewComponent } from './pokemon-view/pokemon-view.component';
 import { PokemonService } from './services/pokemon.service';
+import { ErrorPageComponent } from '../error-page/error-page.component';
 
 
 @NgModule({
   declarations: [
     PokemonDetailsComponent,
     PokemonListComponent,
-    PokemonViewComponent
+    PokemonViewComponent,
   ],
   imports: [
     CommonModule,

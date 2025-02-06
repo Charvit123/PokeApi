@@ -25,7 +25,7 @@ export class PokemonListComponent implements OnInit {
   selectedPower: string;
 
   page = 1;
-  pageSize = 4;
+  pageSize = 10;
   collectionSize = 0;
 
   constructor(private fb: FormBuilder, private pokemonService: PokemonService,
