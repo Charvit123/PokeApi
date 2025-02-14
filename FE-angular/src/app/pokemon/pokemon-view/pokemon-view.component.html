@@ -1,13 +1,49 @@
 <div class="container">
   <div *ngIf="!isNotFound">
-    <div class="glass-card card m-4 p-3">
-      <img src="{{ pokemon.imageUrl }}" alt="" />
-      <p class="display-6">{{ pokemon.name | titlecase }}</p>
+    <div
+      *ngIf="isNotificationOn && notification !== null"
+      [ngClass]="{
+        'alert alert-dismissible fade show': true,
+        'alert-danger': notification.getType() === 'error',
+        'alert-success': notification.getType() === 'success'
+      }"
+      role="alert"
+    >
+      <strong>{{ notification.getType() }}!</strong>
+      {{ notification.getMessage() }}
+      <button
+        type="button"
+        class="btn-close"
+        data-bs-dismiss="alert"
+        aria-label="Close"
+        (click)="hideNotification()"
+      ></button>
+    </div>
+    <div class="glass-card card m-4 p-3 text-center">
+      <img
+        [src]="pokemon.imageUrl"
+        [alt]="pokemon.name"
+        class="img-fluid mb-3"
+      />
+
+      <h2 class="display-6">{{ pokemon.name | titlecase }}</h2>
+
       <p>
         Speciality:
         <span class="badge bg-secondary">{{ pokemon.power.name }}</span>
       </p>
-      <button class="btn btn-primary m-auto" (click)="goBack()">Go Back</button>
+
+      <div class="d-flex justify-content-center mt-3">
+        <button class="btn btn-warning m-2" (click)="updatePokemon()">
+          Update
+        </button>
+        <button class="btn btn-danger m-2" (click)="deletePokemon()">
+          Delete
+        </button>
+      </div>
+      <button class="btn btn-primary mx-auto mt-3 mb-2" (click)="goBack()">
+        Go Back
+      </button>
     </div>
   </div>
 </div>

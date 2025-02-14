@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PokemonModel } from '../../model/pokemon.model';
 import { PokemonService } from '../services/pokemon.service';
-import { ErrorPageComponent } from 'src/app/error-page/error-page.component';
+import { Notification } from '../../model/notification.model';
 
 @Component({
   selector: 'app-pokemon-view',
@@ -14,6 +14,8 @@ export class PokemonViewComponent implements OnInit {
   id: number;
   pokemon: PokemonModel;
   isNotFound: boolean = false;
+  isNotificationOn: boolean = false;
+  notification: Notification | null;
 
   constructor(
     private route: ActivatedRoute,
@@ -23,6 +25,7 @@ export class PokemonViewComponent implements OnInit {
   ) {
     this.id = 0;
     this.pokemon = new PokemonModel();
+    this.notification = null;
   }
 
   ngOnInit(): void {
@@ -54,6 +57,40 @@ export class PokemonViewComponent implements OnInit {
 
   hideError() {
     this.isNotFound = false;
+  }
+  showNotification(notification: Notification) {
+    this.isNotificationOn = true;
+    this.notification = notification;
+    setTimeout(() => {
+      this.hideNotification();
+      this.router.navigate(['/']);
+    }, 3000);
+  }
+  hideNotification() {
+    this.isNotificationOn = false;
+    this.notification = null;
+  }
+
+  updatePokemon() {
+    this.location.back();
+  }
+  deletePokemon() {
+    const handleNextResponse = () => {
+      this.showNotification(
+        new Notification('success', `Pokemon ${this.pokemon?.name} Deleted`)
+      );
+    };
+    const handleErrorResponse = (error: any) => {
+      this.showNotification(new Notification('error', error.message));
+    };
+    if (this.pokemon?.id !== undefined) {
+      this.pokemonService.deletePokemon(this.pokemon.id).subscribe({
+        next: handleNextResponse.bind(this),
+        error: handleErrorResponse.bind(this),
+      });
+    } else {
+      console.error('Pokemon ID is undefined, cannot delete.');
+    }
   }
 
   goBack() {

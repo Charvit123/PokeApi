@@ -5,27 +5,29 @@ import { environment } from 'src/environments/environment';
 import { PokemonModel } from '../../model/pokemon.model';
 
 @Injectable()
-
 export class PokemonService {
-  baseUrl = environment.baseUrl
-  pokemonUrl = this.baseUrl + "pokemon"
-  powerUrl = this.baseUrl + "power"
+  baseUrl = environment.baseUrl;
+  pokemonUrl = this.baseUrl + 'pokemon/';
+  powerUrl = this.baseUrl + 'power/';
 
   public pokemons: PokemonModel[] = [];
 
-  constructor(private http: HttpClient) {
-  }
+  constructor(private http: HttpClient) {}
 
   public setPokemons(pokemons: PokemonModel[]) {
-    this.pokemons = pokemons
+    this.pokemons = pokemons;
   }
 
   getPokemons() {
-    return this.http.get<PokemonModel[]>(this.pokemonUrl)
+    return this.http.get<PokemonModel[]>(this.pokemonUrl);
   }
 
   savePokemon(pokemon: PokemonModel) {
-    return this.http.post<PokemonModel>(this.pokemonUrl, pokemon)
+    return this.http.post<PokemonModel>(this.pokemonUrl, pokemon);
+  }
+
+  deletePokemon(id: number) {
+    return this.http.delete<PokemonModel>(this.pokemonUrl + id);
   }
 
   getPowers() {

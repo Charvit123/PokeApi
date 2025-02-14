@@ -1,0 +1,16 @@
+datasources:
+  default:
+    driver-class-name: ${DATASOURCES_DEFAULT_DRIVER:org.mariadb.jdbc.Driver }
+    db-type: mariadb
+    dialect: MYSQL
+    jdbc-url: ${DATASOURCES_DEFAULT_URL:`jdbc:mariadb://localhost:3308/pokemon_test`}
+    username: ${DATASOURCES_DEFAULT_USER:root }
+    password: ${DATASOURCES_DEFAULT_PASSWORD:my-secret-pw }
+liquibase:
+  datasources:
+    default:
+      change-log: classpath:db/liquibase-test-changelog.yml
+logger:
+  levels:
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql: TRACE

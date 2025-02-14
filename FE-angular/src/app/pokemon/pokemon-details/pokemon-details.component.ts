@@ -5,17 +5,17 @@ import { PokemonModel } from '../../model/pokemon.model';
 @Component({
   selector: 'app-pokemon-details',
   templateUrl: './pokemon-details.component.html',
-  styleUrls: ['./pokemon-details.component.css']
+  styleUrls: ['./pokemon-details.component.css'],
 })
 export class PokemonDetailsComponent {
-  @Input() pokemon: PokemonModel
-  @Input() searchText: string
+  @Input() pokemon: PokemonModel;
+  @Input() searchText: string;
   constructor() {
     this.pokemon = {
       name: '',
-      imageId: 0,
-      power: new PowerModel()
-    }
-    this.searchText = ''
+      imageUrl: '',
+      power: new PowerModel(),
+    };
+    this.searchText = '';
   }
 }

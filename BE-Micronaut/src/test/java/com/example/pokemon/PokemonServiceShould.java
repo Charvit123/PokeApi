@@ -56,7 +56,7 @@ class PokemonServiceShould {
     pokemons = List.of(pikachuPokemon, bulbasaurPokemon);
 
     pokemonCreationForm =
-        new PokemonCreationForm(pikachuPokemon.getName(), pikachuPokemon.getPower().getName());
+        new PokemonCreationForm(pikachuPokemon.getName(), pikachuPokemon.getPower().getName(), pikachuPokemon.getImageUrl());
 
     pokemonUpdationForm = new PokemonUpdationForm(bulbasaurPokemon.getId(), bulbasaurPokemon.getName(), "Fire", bulbasaurPokemon.getImageUrl());
 
@@ -142,6 +142,14 @@ class PokemonServiceShould {
     pokemonService.delete(anyInt());
 
     verify(pokemonRepository).deleteById(anyInt());
+  }
+
+  @Test
+  @DisplayName("Delete All Pokemon")
+  void delete_all_pokemon() {
+    pokemonService.deleteAll();
+
+    verify(pokemonRepository).deleteAll();
   }
 
   @Test

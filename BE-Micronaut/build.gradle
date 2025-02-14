@@ -32,6 +32,7 @@ dependencies {
 
     runtimeOnly("ch.qos.logback:logback-classic")
     runtimeOnly("org.mariadb.jdbc:mariadb-java-client")
+    runtimeOnly("io.micronaut.sql:micronaut-hibernate-jpa")
 
 }
 

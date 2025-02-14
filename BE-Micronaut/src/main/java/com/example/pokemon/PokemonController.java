@@ -35,8 +35,14 @@ public class PokemonController {
     }
 
     @Delete("/{id}")
-    public HttpResponse<Pokemon> delete(@PathVariable Integer id) {
+    public HttpResponse<Void> delete(@PathVariable Integer id) {
         pokemonService.delete(id);
+        return HttpResponse.ok();
+    }
+
+    @Delete("/delete-all")
+    public HttpResponse<Void> deleteAll() {
+        pokemonService.deleteAll();
         return HttpResponse.ok();
     }
 }

@@ -27,7 +27,6 @@ public class PokemonControllerShould {
 
     @Test
     void get_all_pokemon() {
-        // Arrange
         pokemonController.getAll();
 
         verify(pokemonService).getAll();
@@ -35,15 +34,12 @@ public class PokemonControllerShould {
 
     @Test
     void get_pokemon_by_id_found() {
-        // Arrange
         Power power = new Power(1L, "fire");
         Pokemon mockPokemon = new Pokemon(1, "Pikachu", power, "Pikachu.png");
         when(pokemonService.getById(1)).thenReturn(mockPokemon);
 
-        // Act
         HttpResponse<Pokemon> response = pokemonController.getById(1);
 
-        // Assert
         assertEquals(HttpStatus.OK, response.getStatus());
         assertEquals("Pikachu", Objects.requireNonNull(response.body()).getName());
         verify(pokemonService).getById(1);
@@ -51,16 +47,13 @@ public class PokemonControllerShould {
 
     @Test
     void create_pokemon() {
-        // Arrange
         Power power = new Power(1L, "fire");
-        PokemonCreationForm form = new PokemonCreationForm("Bulbasaur", power.getName());
+        PokemonCreationForm form = new PokemonCreationForm("Bulbasaur", power.getName(), "imgUrl");
         Pokemon createdPokemon = new Pokemon(3, "Bulbasaur", power, "image.url");
         when(pokemonService.create(form)).thenReturn(createdPokemon);
 
-        // Act
         HttpResponse<Pokemon> response = pokemonController.create(form);
 
-        // Assert
         assertEquals(HttpStatus.CREATED, response.getStatus());
         assertEquals("Bulbasaur", Objects.requireNonNull(response.body()).getName());
         verify(pokemonService).create(form);
@@ -68,16 +61,13 @@ public class PokemonControllerShould {
 
     @Test
     void update_pokemon() {
-        // Arrange
         Power power = new Power(1L, "fire");
         PokemonUpdationForm form = new PokemonUpdationForm(1, "Raichu", power.getName(), "image.url");
         Pokemon updatedPokemon = new Pokemon(1, "Raichu", power, "pokemon.url");
         when(pokemonService.update(form)).thenReturn(updatedPokemon);
 
-        // Act
         HttpResponse<Pokemon> response = pokemonController.update(form);
 
-        // Assert
         assertEquals(HttpStatus.CREATED, response.getStatus());
         assertEquals("Raichu", Objects.requireNonNull(response.body()).getName());
         verify(pokemonService).update(form);
@@ -85,12 +75,17 @@ public class PokemonControllerShould {
 
     @Test
     void delete_pokemon() {
-        // Act
-        HttpResponse<Pokemon> response = pokemonController.delete(1);
+        HttpResponse<Void> response = pokemonController.delete(1);
 
-        // Assert
         assertEquals(HttpStatus.OK, response.getStatus());
         verify(pokemonService).delete(1);
+    }
+    @Test
+    void delete_all_pokemon() {
+        HttpResponse<Void> response = pokemonController.deleteAll();
+
+        assertEquals(HttpStatus.OK, response.getStatus());
+        verify(pokemonService).deleteAll();
     }
 
 }
