@@ -1,24 +1,5 @@
 <div class="container">
   <div *ngIf="!isNotFound">
-    <div
-      *ngIf="isNotificationOn && notification !== null"
-      [ngClass]="{
-        'alert alert-dismissible fade show': true,
-        'alert-danger': notification.getType() === 'error',
-        'alert-success': notification.getType() === 'success'
-      }"
-      role="alert"
-    >
-      <strong>{{ notification.getType() }}!</strong>
-      {{ notification.getMessage() }}
-      <button
-        type="button"
-        class="btn-close"
-        data-bs-dismiss="alert"
-        aria-label="Close"
-        (click)="hideNotification()"
-      ></button>
-    </div>
     <div class="glass-card card m-4 p-3 text-center">
       <img
         [src]="pokemon.imageUrl"

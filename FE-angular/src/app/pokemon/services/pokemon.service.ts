@@ -3,6 +3,8 @@ import { Injectable } from '@angular/core';
 import { PowerModel } from 'src/app/model/power.model';
 import { environment } from 'src/environments/environment';
 import { PokemonModel } from '../../model/pokemon.model';
+import { BehaviorSubject, Observable, tap } from 'rxjs';
+import { Notification } from '../../model/notification.model';
 
 @Injectable()
 export class PokemonService {
@@ -10,24 +12,44 @@ export class PokemonService {
   pokemonUrl = this.baseUrl + 'pokemon/';
   powerUrl = this.baseUrl + 'power/';
 
-  public pokemons: PokemonModel[] = [];
+  private pokemonsSubject = new BehaviorSubject<PokemonModel[]>([]); // BehaviorSubject
+  pokemons$ = this.pokemonsSubject.asObservable();
+
+  private notificationSubject = new BehaviorSubject<Notification | null>(null);
+  notification$: Observable<Notification | null> =
+    this.notificationSubject.asObservable();
 
   constructor(private http: HttpClient) {}
 
-  public setPokemons(pokemons: PokemonModel[]) {
-    this.pokemons = pokemons;
+  sendNotification(notification: Notification) {
+    this.notificationSubject.next(notification);
   }
 
-  getPokemons() {
-    return this.http.get<PokemonModel[]>(this.pokemonUrl);
+  getPokemons(): Observable<PokemonModel[]> {
+    return this.http.get<PokemonModel[]>(this.pokemonUrl).pipe(
+      tap((pokemons) => {
+        this.pokemonsSubject.next(pokemons);
+      })
+    );
   }
 
-  savePokemon(pokemon: PokemonModel) {
-    return this.http.post<PokemonModel>(this.pokemonUrl, pokemon);
+  savePokemon(pokemon: PokemonModel): Observable<PokemonModel> {
+    return this.http.post<PokemonModel>(this.pokemonUrl, pokemon).pipe(
+      tap((savedPokemon) => {
+        const currentPokemons = this.pokemonsSubject.getValue();
+        this.pokemonsSubject.next([...currentPokemons, savedPokemon]);
+      })
+    );
   }
 
-  deletePokemon(id: number) {
-    return this.http.delete<PokemonModel>(this.pokemonUrl + id);
+  deletePokemon(id: number): Observable<PokemonModel> {
+    return this.http.delete<PokemonModel>(this.pokemonUrl + id).pipe(
+      tap(() => {
+        const currentPokemons = this.pokemonsSubject.getValue();
+        const updatedPokemons = currentPokemons.filter((p) => p.id !== id);
+        this.pokemonsSubject.next(updatedPokemons);
+      })
+    );
   }
 
   getPowers() {

@@ -58,31 +58,24 @@ export class PokemonViewComponent implements OnInit {
   hideError() {
     this.isNotFound = false;
   }
-  showNotification(notification: Notification) {
-    this.isNotificationOn = true;
-    this.notification = notification;
-    setTimeout(() => {
-      this.hideNotification();
-      this.router.navigate(['/']);
-    }, 3000);
-  }
-  hideNotification() {
-    this.isNotificationOn = false;
-    this.notification = null;
-  }
 
   updatePokemon() {
     this.location.back();
   }
   deletePokemon() {
     const handleNextResponse = () => {
-      this.showNotification(
+      this.pokemonService.sendNotification(
         new Notification('success', `Pokemon ${this.pokemon?.name} Deleted`)
       );
+      this.router.navigate(['/pokemon-list']);
     };
+
     const handleErrorResponse = (error: any) => {
-      this.showNotification(new Notification('error', error.message));
+      this.pokemonService.sendNotification(
+        new Notification('error', error.message)
+      );
     };
+
     if (this.pokemon?.id !== undefined) {
       this.pokemonService.deletePokemon(this.pokemon.id).subscribe({
         next: handleNextResponse.bind(this),

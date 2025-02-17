@@ -5,12 +5,12 @@ import {
   FormGroup,
   Validators,
 } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
 import { NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
 import { PowerModel } from 'src/app/model/power.model';
 import { PokemonService } from 'src/app/pokemon/services/pokemon.service';
 import { Notification } from '../../model/notification.model';
 import { PokemonModel } from '../../model/pokemon.model';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-pokemon-list',
@@ -27,17 +27,17 @@ export class PokemonListComponent implements OnInit {
   notification: Notification | null;
   searchText = '';
   selectedPower: string;
+  pokemonsSubscription: Subscription | undefined;
 
   page = 1;
-  pageSize = 10;
+  pageSize = 8;
   collectionSize = 0;
 
   constructor(
     private fb: FormBuilder,
     private pokemonService: PokemonService,
     config: NgbModalConfig,
-    private modalService: NgbModal,
-    private route: ActivatedRoute
+    private modalService: NgbModal
   ) {
     this.addPokemonForm = fb.group({});
     this.allPokemons = [];
@@ -80,6 +80,20 @@ export class PokemonListComponent implements OnInit {
         this.showNotification(new Notification('error', error.message));
       },
     });
+
+    this.pokemonService.notification$.subscribe((notification) => {
+      if (notification) {
+        this.showNotification(notification);
+      }
+    });
+
+    this.pokemonsSubscription = this.pokemonService.pokemons$.subscribe(
+      (pokemons: PokemonModel[]) => {
+        this.allPokemons = pokemons;
+        this.collectionSize = pokemons.length;
+        this.refreshPokemons();
+      }
+    );
   }
 
   openModel(content: any) {
