@@ -6,7 +6,6 @@
         [alt]="pokemon.name"
         class="img-fluid mb-3"
       />
-
       <h2 class="display-6">{{ pokemon.name | titlecase }}</h2>
 
       <p>
@@ -15,7 +14,7 @@
       </p>
 
       <div class="d-flex justify-content-center mt-3">
-        <button class="btn btn-warning m-2" (click)="updatePokemon()">
+        <button class="btn btn-warning m-2" (click)="openModel(content)">
           Update
         </button>
         <button class="btn btn-danger m-2" (click)="deletePokemon()">
@@ -27,4 +26,76 @@
       </button>
     </div>
   </div>
+
+  <ng-template #content let-c="close" let-d="dismiss">
+    <div class="modal-header">
+      <h5 class="modal-title" id="updateModalLabel">Update Pokemon</h5>
+      <button
+        type="button"
+        class="btn-close"
+        aria-label="Close"
+        (click)="d('Cross click')"
+      ></button>
+    </div>
+    <div class="modal-body">
+      <form [formGroup]="updatePokemonForm">
+        <div class="mb-3">
+          <label for="pokemonName" class="form-label">Name</label>
+          <input
+            type="text"
+            class="form-control"
+            id="pokemonName"
+            formControlName="name"
+          />
+          <div
+            class="alert alert-danger p-1"
+            *ngIf="name?.invalid && (name?.dirty || name?.touched)"
+          >
+            <div *ngIf="name?.errors?.['required']">Name is required.</div>
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label for="pokemonPower" class="form-label">Speciality</label>
+          <select class="form-control" formControlName="power">
+            <option value="">Select power</option>
+            <option *ngFor="let power of allPowers" [value]="power?.name">
+              {{ power?.name }}
+            </option>
+          </select>
+          <div
+            class="alert alert-danger p-1"
+            *ngIf="power?.invalid && (power?.dirty || power?.touched)"
+          >
+            <div *ngIf="power?.errors?.['required']">Power is required.</div>
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label for="pokemonImage" class="form-label">Image URL</label>
+          <input
+            type="text"
+            class="form-control"
+            id="pokemonImage"
+            formControlName="imageUrl"
+          />
+          <div
+            class="alert alert-danger p-1"
+            *ngIf="image?.invalid && (image?.dirty || image?.touched)"
+          >
+            <div *ngIf="image?.errors?.['required']">Image is required.</div>
+          </div>
+        </div>
+
+        <button
+          type="button"
+          class="btn btn-dark"
+          [disabled]="updatePokemonForm.invalid"
+          (click)="updatePokemon()"
+        >
+          Save
+        </button>
+      </form>
+    </div>
+  </ng-template>
 </div>

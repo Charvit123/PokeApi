@@ -1,9 +1,12 @@
 import { Location } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { PokemonModel } from '../../model/pokemon.model';
+import { PokemonModel, PokemonUpdateModel } from '../../model/pokemon.model';
 import { PokemonService } from '../services/pokemon.service';
 import { Notification } from '../../model/notification.model';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { PowerModel } from 'src/app/model/power.model';
 
 @Component({
   selector: 'app-pokemon-view',
@@ -16,12 +19,16 @@ export class PokemonViewComponent implements OnInit {
   isNotFound: boolean = false;
   isNotificationOn: boolean = false;
   notification: Notification | null;
+  updatePokemonForm!: FormGroup;
+  allPowers!: PowerModel[];
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private location: Location,
-    private pokemonService: PokemonService
+    private pokemonService: PokemonService,
+    private modalService: NgbModal,
+    private fb: FormBuilder
   ) {
     this.id = 0;
     this.pokemon = new PokemonModel();
@@ -47,6 +54,17 @@ export class PokemonViewComponent implements OnInit {
       next: handleNextResponse.bind(this),
       error: handleErrorResponse.bind(this),
     });
+    this.pokemonService.getPowers().subscribe({
+      next: (powers) => (this.allPowers = powers),
+    });
+  }
+
+  initForm() {
+    this.updatePokemonForm = this.fb.group({
+      name: [this.pokemon.name, Validators.required],
+      power: [this.pokemon.power.name, Validators.required],
+      imageUrl: [this.pokemon.imageUrl, Validators.required],
+    });
   }
 
   showError() {
@@ -59,8 +77,45 @@ export class PokemonViewComponent implements OnInit {
     this.isNotFound = false;
   }
 
+  openModel(content: any) {
+    this.initForm();
+    this.modalService.open(content, { centered: true });
+  }
+
+  get name() {
+    return this.updatePokemonForm.get('name');
+  }
+
+  get power() {
+    return this.updatePokemonForm.get('power');
+  }
+
+  get image() {
+    return this.updatePokemonForm.get('imageUrl');
+  }
+
   updatePokemon() {
-    this.location.back();
+    const updatedValues = this.updatePokemonForm.value;
+    const updatedPokemon: PokemonUpdateModel = {
+      ...this.pokemon,
+      name: updatedValues.name,
+      power: updatedValues.power,
+      imageUrl: updatedValues.imageUrl,
+    };
+    this.pokemonService.updatePokemon(updatedPokemon).subscribe({
+      next: (response: PokemonModel) => {
+        this.pokemon = response;
+        this.pokemonService.sendNotification(
+          new Notification('success', `Pokemon ${this.pokemon.name} updated`)
+        );
+        this.modalService.dismissAll();
+      },
+      error: (error) => {
+        this.pokemonService.sendNotification(
+          new Notification('error', error.message)
+        );
+      },
+    });
   }
   deletePokemon() {
     const handleNextResponse = () => {

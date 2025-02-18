@@ -97,7 +97,7 @@ export class PokemonListComponent implements OnInit {
   }
 
   openModel(content: any) {
-    this.modalService.open(content);
+    this.modalService.open(content, { centered: true });
   }
 
   refreshPokemons() {

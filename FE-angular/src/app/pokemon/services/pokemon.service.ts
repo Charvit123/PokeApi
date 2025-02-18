@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { PowerModel } from 'src/app/model/power.model';
 import { environment } from 'src/environments/environment';
-import { PokemonModel } from '../../model/pokemon.model';
+import { PokemonModel, PokemonUpdateModel } from '../../model/pokemon.model';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { Notification } from '../../model/notification.model';
 
@@ -38,6 +38,21 @@ export class PokemonService {
       tap((savedPokemon) => {
         const currentPokemons = this.pokemonsSubject.getValue();
         this.pokemonsSubject.next([...currentPokemons, savedPokemon]);
+      })
+    );
+  }
+
+  updatePokemon(pokemon: PokemonUpdateModel): Observable<PokemonModel> {
+    return this.http.put<PokemonModel>(this.pokemonUrl, pokemon).pipe(
+      tap((updatedPokemon) => {
+        const currentPokemons = this.pokemonsSubject.getValue();
+        const index = currentPokemons.findIndex(
+          (p) => p.id === updatedPokemon.id
+        );
+        if (index !== -1) {
+          currentPokemons[index] = updatedPokemon;
+          this.pokemonsSubject.next([...currentPokemons]);
+        }
       })
     );
   }
