@@ -6,3 +6,9 @@ export class PokemonModel {
   power: PowerModel = new PowerModel();
   imageUrl?: string = '';
 }
+
+export class PokemonUpdateModel {
+  name: string = '';
+  power: string = '';
+  imageUrl?: string = '';
+}
