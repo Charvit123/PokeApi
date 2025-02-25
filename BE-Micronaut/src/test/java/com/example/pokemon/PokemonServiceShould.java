@@ -2,10 +2,8 @@ package com.example.pokemon;
 
 import com.example.exception.PokemonValidationException;
 import com.example.power.Power;
-import com.example.power.PowerRepository;
 import com.example.power.PowerService;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -17,215 +15,145 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.assertj.core.api.Assertions.catchThrowableOfType;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class PokemonServiceShould {
 
-  @Mock
-  PokemonRepository pokemonRepository;
-  @Mock
-  PowerRepository powerRepository;
-  @Mock
-  PowerService powerService;
-  @InjectMocks
-  PokemonService pokemonService;
-  Power power;
-  Pokemon pikachuPokemon;
-  Pokemon bulbasaurPokemon;
-  PokemonUpdationForm pokemonUpdationForm;
+    @Mock
+    private PokemonRepository pokemonRepository;
 
-  List<Pokemon> pokemons;
+    @Mock
+    private PowerService powerService;
 
-  PokemonCreationForm pokemonCreationForm;
+    @InjectMocks
+    private PokemonService pokemonService;
 
-  @BeforeEach
-  void setUp() {
+    private Power firePower;
+    private Pokemon pikachu;
+    private Pokemon bulbasaur;
+    private PokemonCreationForm creationForm;
+    private PokemonUpdationForm updationForm;
 
-    power = new Power(1L, "fire");
+    @BeforeEach
+    void setUp() {
+        firePower = new Power("Fire");
+        pikachu = new Pokemon(1, "Pikachu", firePower, "pikachu.png");
+        bulbasaur = new Pokemon(2, "Bulbasaur", firePower, "bulbasaur.png");
 
-    pikachuPokemon = new Pokemon(1, "Pikachu", power, "Pikachu.png");
+        creationForm = new PokemonCreationForm("Pikachu", firePower.getName(), "pikachu.png");
+        updationForm = new PokemonUpdationForm(2, "Bulbasaur", firePower.getName(), "bulbasaur.png");
+    }
 
-    bulbasaurPokemon = new Pokemon(2, "Bulbasaur", power, "Bulbasaur.png");
+    @Test
+    void get_all_pokemons() {
+        when(pokemonRepository.findAll()).thenReturn(List.of(pikachu, bulbasaur));
 
-    pokemons = List.of(pikachuPokemon, bulbasaurPokemon);
+        List<Pokemon> returnedPokemons = pokemonService.getAll();
 
-    pokemonCreationForm =
-        new PokemonCreationForm(pikachuPokemon.getName(), pikachuPokemon.getPower().getName(), pikachuPokemon.getImageUrl());
+        assertEquals(2, returnedPokemons.size());
+        verify(pokemonRepository).findAll();
+    }
 
-    pokemonUpdationForm = new PokemonUpdationForm(bulbasaurPokemon.getId(), bulbasaurPokemon.getName(), "Fire", bulbasaurPokemon.getImageUrl());
+    @Test
+    void create_pokemon_successfully() {
+        when(powerService.getOrCreate("Fire")).thenReturn(firePower);
+        when(pokemonRepository.existsByNameIgnoreCase("Pikachu")).thenReturn(false);
+        when(pokemonRepository.save(any())).thenReturn(pikachu);
 
-    powerService = new PowerService(powerRepository);
+        Pokemon createdPokemon = pokemonService.create(creationForm);
 
-    pokemonService = new PokemonService(pokemonRepository, powerService);
-  }
+        assertEquals("Pikachu", createdPokemon.getName());
+        verify(pokemonRepository).save(any());
+    }
 
-  @Test
-  @DisplayName("Test Get All Pokemons")
-  void getAll() {
+    @Test
+    void throw_exception_when_creating_duplicate_pokemon() {
+        when(pokemonRepository.existsByNameIgnoreCase("Pikachu")).thenReturn(true);
 
-    when(pokemonRepository.findAll()).thenReturn(pokemons);
+        PokemonValidationException exception = assertThrows(
+                PokemonValidationException.class, () -> pokemonService.create(creationForm)
+        );
 
-    List<Pokemon> retunedPokemons = pokemonService.getAll();
+        assertEquals("Pokemon With name: Pikachu Already Exist", exception.getMessage());
+        verify(pokemonRepository, never()).save(any());
+    }
 
-    verify(pokemonRepository).findAll();
+    @Test
+    void get_pokemon_by_id_successfully() {
+        when(pokemonRepository.findById(1)).thenReturn(Optional.of(pikachu));
 
-    assertThat(retunedPokemons).isEqualTo(pokemons);
-  }
+        Pokemon foundPokemon = pokemonService.getById(1);
 
-  @Test
-  @DisplayName("Test Create Pokemon")
-  void create() {
+        assertEquals("Pikachu", foundPokemon.getName());
+        verify(pokemonRepository).findById(1);
+    }
 
-    when(powerRepository.findByName(anyString())).thenReturn(power);
+    @Test
+    void throw_exception_when_getting_non_existent_pokemon_by_id() {
+        when(pokemonRepository.findById(3)).thenReturn(Optional.empty());
 
-    when(pokemonRepository.existsByNameIgnoreCase(anyString())).thenReturn(false);
+        PokemonValidationException exception = assertThrows(
+                PokemonValidationException.class, () -> pokemonService.getById(3)
+        );
 
-    when(pokemonRepository.save(any())).thenReturn(pikachuPokemon);
+        assertEquals("Pokemon with id: 3 Not found", exception.getMessage());
+        verify(pokemonRepository).findById(3);
+    }
 
-    Pokemon returnedPokemon = pokemonService.create(pokemonCreationForm);
+    @Test
+    void update_pokemon_successfully() {
+        when(pokemonRepository.findById(2)).thenReturn(Optional.of(bulbasaur));
+        when(powerService.getOrCreate("Fire")).thenReturn(firePower);
+        when(pokemonRepository.update(any())).thenReturn(bulbasaur);
 
-    verify(pokemonRepository).save(any());
-    verify(powerRepository).findByName(anyString());
-    verify(pokemonRepository).existsByNameIgnoreCase(anyString());
+        Pokemon updatedPokemon = pokemonService.update(updationForm);
 
-    assertThat(returnedPokemon).isEqualTo(pikachuPokemon);
-  }
+        assertEquals("Bulbasaur", updatedPokemon.getName());
+        verify(pokemonRepository).update(any());
+    }
 
-  @Test
-  @DisplayName("Test Get Pokemon By Id")
-  void getAllById() {
-    when(pokemonRepository.findById(anyInt())).thenReturn(Optional.ofNullable(pikachuPokemon));
+    @Test
+    void throw_exception_when_updating_non_existent_pokemon() {
+        when(pokemonRepository.findById(5)).thenReturn(Optional.empty());
 
-    Pokemon returnedPokemon = pokemonService.getById(1);
+        PokemonValidationException exception = assertThrows(
+                PokemonValidationException.class, () -> pokemonService.update(new PokemonUpdationForm(5, "Raichu", "Electric", "raichu.png"))
+        );
 
-    verify(pokemonRepository).findById(anyInt());
+        assertEquals("Pokemon With id: 5 does not exist", exception.getMessage());
+        verify(pokemonRepository, never()).update(any());
+    }
 
-    assertThat(returnedPokemon).isEqualTo(pikachuPokemon);
-  }
+    @Test
+    void delete_pokemon_successfully() {
+        when(pokemonRepository.existsById(1)).thenReturn(true);
 
-  @Test
-  @DisplayName("Test Update Pokemon")
-  void update() {
+        pokemonService.delete(1);
 
-    when(pokemonRepository.findById(anyInt())).thenReturn(Optional.ofNullable(bulbasaurPokemon));
-    when(powerRepository.findByName(anyString())).thenReturn(power);
+        verify(pokemonRepository).deleteById(1);
+    }
 
+    @Test
+    void throw_exception_when_deleting_non_existent_pokemon() {
+        when(pokemonRepository.existsById(10)).thenReturn(false);
 
-    when(pokemonRepository.findByNameIgnoreCase(anyString()))
-        .thenReturn(Optional.ofNullable(bulbasaurPokemon));
+        PokemonValidationException exception = assertThrows(
+                PokemonValidationException.class, () -> pokemonService.delete(10)
+        );
 
-    when(pokemonRepository.update(any())).thenReturn(bulbasaurPokemon);
+        assertEquals("Pokemon with id 10 Not Found", exception.getMessage());
+        verify(pokemonRepository, never()).deleteById(any());
+    }
 
-    Pokemon updatedPokemon = pokemonService.update(pokemonUpdationForm);
+    @Test
+    void delete_all_pokemons() {
+        pokemonService.deleteAll();
 
-    verify(pokemonRepository).update(any());
-    verify(pokemonRepository).findById(anyInt());
-    verify(pokemonRepository).findByNameIgnoreCase(anyString());
-    verify(powerRepository).findByName(anyString());
+        verify(pokemonRepository).deleteAll();
+    }
 
-
-    assertThat(updatedPokemon).isEqualTo(bulbasaurPokemon);
-  }
-
-  @Test
-  @DisplayName("Test Delete Pokemon")
-  void delete() {
-
-    when(pokemonRepository.existsById(anyInt())).thenReturn(true);
-
-    pokemonService.delete(anyInt());
-
-    verify(pokemonRepository).deleteById(anyInt());
-  }
-
-  @Test
-  @DisplayName("Delete All Pokemon")
-  void delete_all_pokemon() {
-    pokemonService.deleteAll();
-
-    verify(pokemonRepository).deleteAll();
-  }
-
-  @Test
-  @DisplayName("Test Pokemon-name Already exists")
-  void pokemonWithNameExistsException() {
-    when(pokemonRepository.existsByNameIgnoreCase(anyString())).thenReturn(true);
-
-    assertThatThrownBy(() -> pokemonService.create(pokemonCreationForm));
-    catchThrowableOfType(
-        () -> pokemonService.create(pokemonCreationForm), PokemonValidationException.class);
-  }
-
-  @Test
-  @DisplayName("Test Pokemon-Id could not find in update")
-  void pokemonIdNotFoundException() {
-
-    when(pokemonRepository.findById(anyInt())).thenReturn(Optional.empty());
-
-    assertThatThrownBy(() -> pokemonService.update(pokemonUpdationForm));
-
-    catchThrowableOfType(
-        () -> pokemonService.update(pokemonUpdationForm), PokemonValidationException.class);
-  }
-
-  @Test
-  @DisplayName("Test Pokemon-name Already found")
-  void pokemonNameAlreadyFound() {
-    when(pokemonRepository.findById(anyInt())).thenReturn(Optional.ofNullable(bulbasaurPokemon));
-
-    when(pokemonRepository.findByNameIgnoreCase(anyString()))
-        .thenReturn(Optional.ofNullable(pikachuPokemon));
-
-    assertThatThrownBy(() -> pokemonService.update(pokemonUpdationForm));
-
-    catchThrowableOfType(
-        () -> pokemonService.update(pokemonUpdationForm), PokemonValidationException.class);
-  }
-
-  @Test
-  @DisplayName("Test Pokemon-Id does not exist ")
-  void pokemonIdNotExists() {
-    when(pokemonRepository.existsById(anyInt())).thenReturn(false);
-
-    assertThatThrownBy(() -> pokemonService.delete(anyInt()));
-
-    catchThrowableOfType(
-        () -> pokemonService.delete(anyInt()), PokemonValidationException.class);
-  }
-
-  @Test
-  @DisplayName("Test Update Pokemon-power ")
-  void pokemonPowerUpdate() {
-    when(pokemonRepository.findById(anyInt())).thenReturn(Optional.ofNullable(bulbasaurPokemon));
-
-    when(pokemonRepository.findByNameIgnoreCase(anyString())).thenReturn(Optional.empty());
-
-    when(pokemonRepository.update(any())).thenReturn(bulbasaurPokemon);
-
-    Pokemon updatedPokemon = pokemonService.update(pokemonUpdationForm);
-
-    verify(pokemonRepository).update(any());
-    verify(pokemonRepository).findById(anyInt());
-    verify(pokemonRepository).findByNameIgnoreCase(anyString());
-
-    assertThat(updatedPokemon).isEqualTo(bulbasaurPokemon);
-  }
-
-  @Test
-  @DisplayName("Test Pokemon-Id does not found in getById")
-  void pokemonIdNotFound() {
-    when(pokemonRepository.findById(anyInt()))
-        .thenReturn(Optional.empty());
-
-    assertThatThrownBy(() -> pokemonService.getById(anyInt()));
-
-    catchThrowableOfType(
-        () -> pokemonService.getById(anyInt()), PokemonValidationException.class);
-  }
 }

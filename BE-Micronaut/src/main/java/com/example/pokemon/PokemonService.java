@@ -39,14 +39,11 @@ public class PokemonService {
                     "Pokemon With name: " + pokemonForm.getName() + " Already Exist");
         }
 
-        Power power = powerService.get(pokemonForm.getPower());
+        Power power = powerService.getOrCreate(pokemonForm.getPower());
         Pokemon pokemon = new Pokemon();
         pokemon.setName(pokemonForm.getName());
         pokemon.setPower(power);
         pokemon.setImageUrl(pokemonForm.getImageUrl());
-        //        "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/"
-//                + pokemon.getId()
-//                + ".png"
         return pokemonRepository.save(pokemon);
     }
 
@@ -73,7 +70,7 @@ public class PokemonService {
         }
 
         pokemonWithId.setName(pokemonForm.getName());
-        pokemonWithId.setPower(powerService.get(pokemonForm.getPower()));
+        pokemonWithId.setPower(powerService.getOrCreate(pokemonForm.getPower()));
         pokemonWithId.setImageUrl(pokemonForm.getImageUrl());
 
         return pokemonRepository.update(pokemonWithId);

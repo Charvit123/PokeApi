@@ -1,4 +1,4 @@
 export class PowerModel {
-    id: number = 0;
-    name: string = "";
+  id?: number = 0;
+  name: string = '';
 }

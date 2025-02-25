@@ -5,6 +5,9 @@ micronaut:
       port: 5000
       cors:
         enabled: true
+  http:
+    client:
+      read-timeout: 20s
 datasources:
   default:
     driver-class-name: ${DATASOURCES_DEFAULT_DRIVER:org.mariadb.jdbc.Driver }
@@ -13,6 +16,7 @@ datasources:
     jdbc-url: ${DATASOURCES_DEFAULT_URL:`jdbc:mariadb://localhost:3308/pokemon` }
     username: ${DATASOURCES_DEFAULT_USER:root }
     password: ${DATASOURCES_DEFAULT_PASSWORD:my-secret-pw }
+    log-sql: true
 liquibase:
   datasources:
     default:

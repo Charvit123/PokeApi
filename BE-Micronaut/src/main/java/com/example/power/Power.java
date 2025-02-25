@@ -1,30 +1,29 @@
 package com.example.power;
 
+
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.GenerationType;
 
 @Entity
 @Table(name = "power")
 public class Power {
     @Id
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // Auto
+    private Integer id;
     private String name;
 
     public Power() {
     }
 
-    public Power(Long id, String name) {
-        this.id = id;
+    public Power(String name) {
         this.name = name;
     }
 
-    public Long getId() {
+    public Integer getId() {
         return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getName() {

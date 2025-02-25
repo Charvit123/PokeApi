@@ -5,7 +5,12 @@ import { PokemonModel, PokemonUpdateModel } from '../../model/pokemon.model';
 import { PokemonService } from '../services/pokemon.service';
 import { Notification } from '../../model/notification.model';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  Validators,
+} from '@angular/forms';
 import { PowerModel } from 'src/app/model/power.model';
 
 @Component({
@@ -21,6 +26,7 @@ export class PokemonViewComponent implements OnInit {
   notification: Notification | null;
   updatePokemonForm!: FormGroup;
   allPowers!: PowerModel[];
+  addNewPower: boolean = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -64,6 +70,7 @@ export class PokemonViewComponent implements OnInit {
       name: [this.pokemon.name, Validators.required],
       power: [this.pokemon.power.name, Validators.required],
       imageUrl: [this.pokemon.imageUrl, Validators.required],
+      newPower: this.fb.control(''),
     });
   }
 
@@ -82,16 +89,39 @@ export class PokemonViewComponent implements OnInit {
     this.modalService.open(content, { centered: true });
   }
 
-  get name() {
-    return this.updatePokemonForm.get('name');
+  get Name() {
+    return this.updatePokemonForm.get('name') as FormControl;
   }
 
-  get power() {
-    return this.updatePokemonForm.get('power');
+  get Power() {
+    return this.updatePokemonForm.get('power') as FormControl;
+  }
+  get NewPower() {
+    return this.updatePokemonForm.get('newPower') as FormControl;
   }
 
-  get image() {
-    return this.updatePokemonForm.get('imageUrl');
+  get Image() {
+    return this.updatePokemonForm.get('imageUrl') as FormControl;
+  }
+
+  changePower(e: any) {
+    if (e.target.value === 'addNew') {
+      this.addNewPower = true;
+      this.Power.setValue('', { onlySelf: true });
+    } else {
+      this.addNewPower = false;
+      this.Power.setValue(e.target.value, { onlySelf: true });
+    }
+  }
+
+  saveNewPower() {
+    if (this.NewPower.value.trim()) {
+      const newPowerName = this.NewPower.value;
+      this.allPowers.push({ name: newPowerName });
+      this.Power.setValue(newPowerName);
+      this.addNewPower = false;
+      this.NewPower.setValue('');
+    }
   }
 
   updatePokemon() {

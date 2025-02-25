@@ -35,7 +35,21 @@
             <option *ngFor="let power of allPowers" [value]="power.name">
               {{ power.name }}
             </option>
+            <option value="addNew">+ Add New Power</option>
           </select>
+
+          <div *ngIf="addNewPower">
+            <input
+              type="text"
+              class="form-control mt-2"
+              formControlName="newPower"
+              placeholder="Enter new power"
+              (keyup.enter)="saveNewPower()"
+            />
+            <button class="btn btn-success mt-2" (click)="saveNewPower()">
+              Save Power
+            </button>
+          </div>
           <div
             class="alert alert-danger p-1"
             *ngIf="Power.invalid && (Power.dirty || Power.touched)"

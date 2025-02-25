@@ -49,25 +49,43 @@
           />
           <div
             class="alert alert-danger p-1"
-            *ngIf="name?.invalid && (name?.dirty || name?.touched)"
+            *ngIf="Name?.invalid && (Name?.dirty || Name?.touched)"
           >
-            <div *ngIf="name?.errors?.['required']">Name is required.</div>
+            <div *ngIf="Name?.errors?.['required']">Name is required.</div>
           </div>
         </div>
 
         <div class="mb-3">
           <label for="pokemonPower" class="form-label">Speciality</label>
-          <select class="form-control" formControlName="power">
+          <select
+            class="form-control"
+            formControlName="power"
+            (change)="changePower($event)"
+          >
             <option value="">Select power</option>
             <option *ngFor="let power of allPowers" [value]="power?.name">
               {{ power?.name }}
             </option>
+            <option value="addNew">+ Add New Power</option>
           </select>
+
+          <div *ngIf="addNewPower">
+            <input
+              type="text"
+              class="form-control mt-2"
+              formControlName="newPower"
+              placeholder="Enter new power"
+              (keyup.enter)="saveNewPower()"
+            />
+            <button class="btn btn-success mt-2" (click)="saveNewPower()">
+              Save Power
+            </button>
+          </div>
           <div
             class="alert alert-danger p-1"
-            *ngIf="power?.invalid && (power?.dirty || power?.touched)"
+            *ngIf="Power?.invalid && (Power?.dirty || Power?.touched)"
           >
-            <div *ngIf="power?.errors?.['required']">Power is required.</div>
+            <div *ngIf="Power?.errors?.['required']">Power is required.</div>
           </div>
         </div>
 
@@ -81,9 +99,9 @@
           />
           <div
             class="alert alert-danger p-1"
-            *ngIf="image?.invalid && (image?.dirty || image?.touched)"
+            *ngIf="Image?.invalid && (Image?.dirty || Image?.touched)"
           >
-            <div *ngIf="image?.errors?.['required']">Image is required.</div>
+            <div *ngIf="Image?.errors?.['required']">Image is required.</div>
           </div>
         </div>
 

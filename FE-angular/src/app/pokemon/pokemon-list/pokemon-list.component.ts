@@ -28,6 +28,7 @@ export class PokemonListComponent implements OnInit {
   searchText = '';
   selectedPower: string;
   pokemonsSubscription: Subscription | undefined;
+  addNewPower: boolean = false;
 
   page = 1;
   pageSize = 8;
@@ -54,6 +55,7 @@ export class PokemonListComponent implements OnInit {
       name: this.fb.control('', [Validators.required]),
       power: this.fb.control('', [Validators.required]),
       imageUrl: this.fb.control('', [Validators.required]),
+      newPower: this.fb.control(''),
     });
 
     const handleFetchAllPokemons = (fetchedPokemons: PokemonModel[]) => {
@@ -110,9 +112,23 @@ export class PokemonListComponent implements OnInit {
   }
 
   changePower(e: any) {
-    this.Power.setValue(e.target.value, {
-      onlySelf: true,
-    });
+    if (e.target.value === 'addNew') {
+      this.addNewPower = true;
+      this.Power.setValue('', { onlySelf: true });
+    } else {
+      this.addNewPower = false;
+      this.Power.setValue(e.target.value, { onlySelf: true });
+    }
+  }
+
+  saveNewPower() {
+    if (this.NewPower.value.trim()) {
+      const newPowerName = this.NewPower.value;
+      this.allPowers.push({ name: newPowerName });
+      this.Power.setValue(newPowerName);
+      this.addNewPower = false;
+      this.NewPower.setValue('');
+    }
   }
 
   public filterPokemon(event: any) {
@@ -141,6 +157,9 @@ export class PokemonListComponent implements OnInit {
   }
   public get Power(): FormControl {
     return this.addPokemonForm.get('power') as FormControl;
+  }
+  public get NewPower(): FormControl {
+    return this.addPokemonForm.get('newPower') as FormControl;
   }
 
   clearForm() {

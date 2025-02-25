@@ -34,7 +34,7 @@ public class PokemonControllerShould {
 
     @Test
     void get_pokemon_by_id_found() {
-        Power power = new Power(1L, "fire");
+        Power power = new Power("fire");
         Pokemon mockPokemon = new Pokemon(1, "Pikachu", power, "Pikachu.png");
         when(pokemonService.getById(1)).thenReturn(mockPokemon);
 
@@ -47,7 +47,7 @@ public class PokemonControllerShould {
 
     @Test
     void create_pokemon() {
-        Power power = new Power(1L, "fire");
+        Power power = new Power("fire");
         PokemonCreationForm form = new PokemonCreationForm("Bulbasaur", power.getName(), "imgUrl");
         Pokemon createdPokemon = new Pokemon(3, "Bulbasaur", power, "image.url");
         when(pokemonService.create(form)).thenReturn(createdPokemon);
@@ -61,7 +61,7 @@ public class PokemonControllerShould {
 
     @Test
     void update_pokemon() {
-        Power power = new Power(1L, "fire");
+        Power power = new Power("fire");
         PokemonUpdationForm form = new PokemonUpdationForm(1, "Raichu", power.getName(), "image.url");
         Pokemon updatedPokemon = new Pokemon(1, "Raichu", power, "pokemon.url");
         when(pokemonService.update(form)).thenReturn(updatedPokemon);

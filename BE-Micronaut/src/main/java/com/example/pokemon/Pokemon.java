@@ -10,7 +10,7 @@ public class Pokemon {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private java.lang.Integer id;
+    private Integer id;
 
     private String name;
 
