@@ -9,8 +9,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.List;
 import java.util.Objects;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -27,7 +29,14 @@ public class PokemonControllerShould {
 
     @Test
     void get_all_pokemon() {
-        pokemonController.getAll();
+        Power power = new Power("fire");
+        List<Pokemon> mockPokemons = List.of(new Pokemon(1, "Pikachu", power, "Pikachu.png"), new Pokemon(2, "Bulbasaur", power, "Pikachu.png"));
+        when(pokemonService.getAll()).thenReturn(mockPokemons);
+
+        List<Pokemon> pokemons = pokemonController.getAll();
+
+        assertThat(pokemons).isNotNull().hasSize(2);
+        assertThat(pokemons.get(0)).isInstanceOf(Pokemon.class);
 
         verify(pokemonService).getAll();
     }
@@ -80,6 +89,7 @@ public class PokemonControllerShould {
         assertEquals(HttpStatus.OK, response.getStatus());
         verify(pokemonService).delete(1);
     }
+
     @Test
     void delete_all_pokemon() {
         HttpResponse<Void> response = pokemonController.deleteAll();
